@@ -1,33 +1,24 @@
 import { useEffect, useState } from "react";
 import Wordle from "./components/Wordle";
 
-const requestOptions: RequestInit = {
-  method: "GET", // HTTP method (GET, POST, PUT, DELETE, etc.)
-  credentials: "include",
-  mode: "cors", // Include CORS headers
-  headers: {
-    "Content-Type": "application/json",
-  },
-};
-
-function fetchWithTimeout(
-  url: string,
-  options: RequestInit,
-  timeout: number
-): Promise<Response> {
-  return Promise.race([
-    fetch(url, options),
-    new Promise<Response>((_, reject) =>
-      setTimeout(() => reject(new Error("Request timeout")), timeout)
-    ),
-  ]);
+declare global {
+  interface Window {
+    REACT_APP_API_URL: unknown;
+  }
 }
+
+const api_url = window.REACT_APP_API_URL || {};
 
 function App(): JSX.Element {
   const [user_id, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    void fetchWithTimeout("http://127.0.0.1:5000/wordle", requestOptions, 5000)
+    const address: string = "http://" + api_url + "/wordle";
+    console.log(address);
+    void fetch(address, {
+      method: "GET",
+      headers: { "Content-type": "application/x-www-form-urlencoded" },
+    })
       .then((response) => {
         return response.json();
       })

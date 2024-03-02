@@ -13,6 +13,7 @@ function Modal({ isCorrect, solution, turn }: ModalProps): JSX.Element {
       {isCorrect && (
         <div>
           <p>You Win!</p>
+          <p>The word is:</p>
           <p className="solution">{solution}</p>
           <p>
             You found the solution in {turn} {turn == 1 ? "guess!" : "guesses."}
@@ -23,6 +24,7 @@ function Modal({ isCorrect, solution, turn }: ModalProps): JSX.Element {
       {!isCorrect && (
         <div>
           <p>Sorry, all your guesses were wrong.</p>
+          <p>The word is:</p>
           <p className="solution">{solution}</p>
           <button onClick={handleClick}>Replay?</button>
         </div>

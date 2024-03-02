@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Letter } from "../components/Row";
 
+declare global {
+  interface Window {
+    REACT_APP_API_URL: unknown;
+  }
+}
+
+const api_url = window.REACT_APP_API_URL || {};
+
 interface UseWordleProps {
   user_id: string | null;
 }
@@ -89,14 +97,14 @@ const useWordle = ({ user_id }: UseWordleProps): UseWordleState => {
     setCurrentGuess("");
   };
 
-  const requestOptions: RequestInit = {
+  /*const requestOptions: RequestInit = {
     method: "POST", // HTTP method (GET, POST, PUT, DELETE, etc.)
     credentials: "include",
     mode: "cors", // Include CORS headers
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-  };
+  };*/
 
   const handleKeyup = ({ key }: { key: string }): void => {
     if (key === "Enter") {
@@ -117,37 +125,49 @@ const useWordle = ({ user_id }: UseWordleProps): UseWordleState => {
       }
 
       setInputEnabled(false);
-      void fetch(
-        `http://127.0.0.1:5000/wordle?userid=` +
-          user_id +
-          `&word=` +
-          currentGuess,
-        requestOptions
-      )
+      const final_url =
+        "http://" +
+        api_url +
+        "/wordle?userid=" +
+        user_id +
+        "&word=" +
+        currentGuess;
+      //console.log(final_url);
+      void fetch(final_url, {
+        method: "POST",
+        headers: { "Content-type": "application/x-www-form-urlencoded" },
+      })
         .then((response: Response) => {
           if (!response.ok) {
             throw Error();
           }
+          //console.log(response);
           return response.json();
         })
-        .then((res: string) => {
-          const status: string = JSON.parse(res).status;
+        .then((res) => {
+          //console.log(res);
+          const status: string = res.status;
           if (["match", "miss_match", "miss_all"].indexOf(status) !== -1) {
             const isMatch = status === "match";
-            const word: string | null = JSON.parse(res).word;
-            const letter_colors: string = JSON.parse(res).letter_colors;
+            const word: string | null = res.word;
+            const letter_colors: string = res.letter_colors;
             if (isMatch) setSolution(word);
+            if (status === "miss_all") {
+              setSolution(word);
+            }
             const formatted = formatGuess(letter_colors);
             addNewGuess(formatted, isMatch);
           } else if (status === "used") {
             window.alert("Word already entered");
           } else if (status === "invalid_word") {
             window.alert("You entered an invalid word");
+          } else if (status === "invalid_user_id") {
+            console.log("received invalid user id");
           }
         })
         .catch((err) => {
           console.log(err);
-          window.alert("Word is not recognised!");
+          //window.alert("Word is not recognised!");
           return false;
         })
         .finally(() => {
