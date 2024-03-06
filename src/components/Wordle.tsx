@@ -39,10 +39,14 @@ export default function Wordle({ user_id }: WordleProps): JSX.Element {
 
   return (
     <div>
-      <Grid guesses={guesses} currentGuess={currentGuess} turn={turn} />
-      <Keypad usedKeys={usedKeys} handleKeyup={handleKeyup} />
       {showModal && (
         <Modal isCorrect={isCorrect} solution={solution} turn={turn} />
+      )}
+      {!showModal && (
+        <div>
+          <Grid guesses={guesses} currentGuess={currentGuess} turn={turn} />
+          <Keypad usedKeys={usedKeys} handleKeyup={handleKeyup} />
+        </div>
       )}
     </div>
   );

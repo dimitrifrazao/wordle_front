@@ -8,27 +8,22 @@ function handleClick() {
 }
 
 function Modal({ isCorrect, solution, turn }: ModalProps): JSX.Element {
+  const topText = isCorrect
+    ? "You Win!"
+    : "Sorry, all your guesses were wrong.";
+  const turnText = turn == 1 ? " guess!" : " guesses.";
+  const winText = "You found the solution in " + turn.toString();
+  const botText = isCorrect ? winText + turnText : "";
   return (
     <div className="modal">
-      {isCorrect && (
-        <div>
-          <p>You Win!</p>
-          <p>The word is:</p>
-          <p className="solution">{solution}</p>
-          <p>
-            You found the solution in {turn} {turn == 1 ? "guess!" : "guesses."}
-          </p>
-          <button onClick={handleClick}>Replay?</button>
-        </div>
-      )}
-      {!isCorrect && (
-        <div>
-          <p>Sorry, all your guesses were wrong.</p>
-          <p>The word is:</p>
-          <p className="solution">{solution}</p>
-          <button onClick={handleClick}>Replay?</button>
-        </div>
-      )}
+      <div className="modal_div">
+        <p>{topText}</p>
+        <p className="solution">{solution}</p>
+        <p>{botText}</p>
+        <button id="replay_button" onClick={handleClick}>
+          REPLAY
+        </button>
+      </div>
     </div>
   );
 }
