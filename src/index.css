@@ -5,11 +5,11 @@
 */
 :root {
   --font-family: verdana;
-  --var_green: #39af39;
-  --var_yellow: #d5b62f;
-  --var_grey: #797979;
+  --var_green: #5ac85a;
+  --var_yellow: #e2cc68;
+  --var_grey: #919191;
 
-  --var_light: #cdd8dc;
+  --var_light: #ffffff;
   --var_medium: rgb(143, 143, 143);
   --var_dark: rgb(0, 38, 65);
   --var_dark2: rgb(28, 0, 41);
@@ -47,7 +47,7 @@ h1 {
   width: 60px;
   height: 60px;
 
-  margin: 4px;
+  margin: 5px;
   text-align: center;
   line-height: 60px;
   text-transform: uppercase;
@@ -55,7 +55,7 @@ h1 {
   font-size: 2.5em;
   font-family: var(--font-family);
   background: var(--var_light);
-  border: 1px solid var(--var_light);
+  border: 0px solid var(--var_light);
 }
 .row > div.green {
   --background: var(--var_green);
@@ -102,19 +102,19 @@ h1 {
 }
 .keypad > div.green {
   background: var(--var_green);
-  color: #fff;
+  color: white;
   transition: all 0.3s ease-in;
   animation: bounce 0.2s ease-in-out forwards;
 }
 .keypad > div.yellow {
   background: var(--var_yellow);
-  color: #fff;
+  color: white;
   transition: all 0.3s ease-in;
   animation: bounce 0.2s ease-in-out forwards;
 }
 .keypad > div.grey {
   background: var(--var_grey);
-  color: #fff;
+  color: white;
   transition: all 0.3s ease-in;
   animation: bounce 0.2s ease-in-out forwards;
 }
@@ -179,7 +179,7 @@ h1 {
   100% {
     transform: rotateX(0deg);
     background: var(--background);
-    color: var(--var_light);
+    color: white;
   }
 }
 
