@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { Letter } from "../components/Row";
-
-declare global {
-  interface Window {
-    REACT_APP_API_URL: unknown;
-  }
-}
-
-const api_url = window.REACT_APP_API_URL || {};
+import { wordle_end_point } from "../App";
 
 interface UseWordleProps {
   user_id: string | null;
@@ -97,42 +90,17 @@ const useWordle = ({ user_id }: UseWordleProps): UseWordleState => {
     setCurrentGuess("");
   };
 
-  /*const requestOptions: RequestInit = {
-    method: "POST", // HTTP method (GET, POST, PUT, DELETE, etc.)
-    credentials: "include",
-    mode: "cors", // Include CORS headers
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-  };*/
-
   const handleKeyup = ({ key }: { key: string }): void => {
     if (key === "Enter") {
-      //"{\"letter_colors\": \"#***#\", \"return_word\": null, \"used\": false, \"word_match\": false}"
-      /*if (turn > 5) {
-        console.log("you used all your guesses!");
-        return;
-      }
-
-      if (history.includes(currentGuess)) {
-        console.log("you already tried that word.");
-        return;
-      }*/
-
       if (currentGuess.length !== 5) {
         console.log("word must be 5 chars.");
         return;
       }
 
       setInputEnabled(false);
-      const final_url =
-        "http://" +
-        api_url +
-        "/wordle?userid=" +
-        user_id +
-        "&word=" +
-        currentGuess;
-      //console.log(final_url);
+      const wordle_arguments = "?userid=" + user_id + "&word=" + currentGuess;
+      const final_url = wordle_end_point + wordle_arguments;
+      console.log(final_url);
       void fetch(final_url, {
         method: "POST",
         headers: { "Content-type": "application/x-www-form-urlencoded" },
@@ -141,11 +109,9 @@ const useWordle = ({ user_id }: UseWordleProps): UseWordleState => {
           if (!response.ok) {
             throw Error();
           }
-          //console.log(response);
           return response.json();
         })
         .then((res) => {
-          //console.log(res);
           const status: string = res.status;
           if (["match", "miss_match", "miss_all"].indexOf(status) !== -1) {
             const isMatch = status === "match";
@@ -167,7 +133,6 @@ const useWordle = ({ user_id }: UseWordleProps): UseWordleState => {
         })
         .catch((err) => {
           console.log(err);
-          //window.alert("Word is not recognised!");
           return false;
         })
         .finally(() => {

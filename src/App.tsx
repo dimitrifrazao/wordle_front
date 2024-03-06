@@ -1,21 +1,14 @@
 import { useEffect, useState } from "react";
 import Wordle from "./components/Wordle";
 
-declare global {
-  interface Window {
-    REACT_APP_API_URL: unknown;
-  }
-}
-
-const api_url = window.REACT_APP_API_URL || {};
+export const wordle_end_point = "https://44.218.136.154:5000/wordle";
 
 function App(): JSX.Element {
   const [user_id, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    const address: string = "http://" + api_url + "/wordle";
-    console.log(address);
-    void fetch(address, {
+    console.log(wordle_end_point);
+    void fetch(wordle_end_point, {
       method: "GET",
       headers: { "Content-type": "application/x-www-form-urlencoded" },
     })
