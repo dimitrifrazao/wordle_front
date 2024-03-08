@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { Letter } from "../components/Row";
 import { wordle_end_point } from "../App";
-
-interface UseWordleProps {
-  user_id: string | null;
-}
+import { KeyColor } from "../components/Shared";
+import { Letter } from "../components/Shared";
 
 export interface HandleKeyup {
   ({ key }: { key: string }): void;
@@ -16,33 +13,35 @@ interface UseWordleState {
   guesses: Letter[][];
   history: string[];
   isCorrect: boolean;
-  usedKeys: { [key: string]: "grey" | "green" | "yellow" };
+  newKeys: Set<string>;
+  usedKeys: Map<string, KeyColor>;
   solution: string | null;
   handleKeyup: HandleKeyup;
 }
 
-const useWordle = ({ user_id }: UseWordleProps): UseWordleState => {
+const useWordle = (user_id: string): UseWordleState => {
   const [turn, setTurn] = useState<number>(0);
   const [currentGuess, setCurrentGuess] = useState<string>("");
   const [guesses, setGuesses] = useState<Letter[][]>(Array.from(new Array(6)));
   const [history, setHistory] = useState<string[]>([]);
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
-  const [usedKeys, setUsedKeys] = useState<{
-    [key: string]: "grey" | "green" | "yellow";
-  }>({});
+  const [newKeys, setNewKeys] = useState<Set<string>>(new Set<string>());
+  const [usedKeys, setUsedKeys] = useState<Map<string, KeyColor>>(
+    new Map<string, KeyColor>()
+  );
   const [input_enabled, setInputEnabled] = useState<boolean>(true);
   const [solution, setSolution] = useState<string | null>(null);
 
   const formatGuess = (letter_colors: string): Letter[] => {
     const formattedGuess = [...currentGuess].map((letter) => {
-      return { key: letter, color: "grey" };
+      return { key: letter, color: KeyColor.grey };
     });
 
     [...letter_colors].forEach((color, i) => {
       if (color === "g") {
-        formattedGuess[i].color = "green";
+        formattedGuess[i].color = KeyColor.green;
       } else if (color === "y") {
-        formattedGuess[i].color = "yellow";
+        formattedGuess[i].color = KeyColor.yellow;
       }
     });
 
@@ -64,26 +63,18 @@ const useWordle = ({ user_id }: UseWordleProps): UseWordleState => {
 
     setTurn((prevTurn) => prevTurn + 1);
 
+    setNewKeys((newData) => {
+      newData = new Set<string>();
+      formattedGuess.forEach((letter) => {
+        newData.add(letter.key);
+      });
+      return newData;
+    });
+
     setUsedKeys((prevUsedKeys) => {
       formattedGuess.forEach((letter) => {
-        const currentColor = prevUsedKeys[letter.key];
-
-        if (letter.color === "green") {
-          prevUsedKeys[letter.key] = "green";
-          return;
-        }
-
-        if (letter.color === "yellow" && currentColor !== "green") {
-          prevUsedKeys[letter.key] = "yellow";
-          return;
-        }
-
-        if (letter.color === "grey" && currentColor !== ("green" || "yellow")) {
-          prevUsedKeys[letter.key] = "grey";
-          return;
-        }
+        prevUsedKeys.set(letter.key, letter.color);
       });
-
       return prevUsedKeys;
     });
 
@@ -93,7 +84,7 @@ const useWordle = ({ user_id }: UseWordleProps): UseWordleState => {
   const handleKeyup = ({ key }: { key: string }): void => {
     if (key === "Enter") {
       if (currentGuess.length !== 5) {
-        console.log("word must be 5 chars.");
+        window.alert("You need to enter 5 characters before submitting a word");
         return;
       }
 
@@ -156,6 +147,7 @@ const useWordle = ({ user_id }: UseWordleProps): UseWordleState => {
     guesses,
     history,
     isCorrect,
+    newKeys,
     usedKeys,
     solution,
     handleKeyup,

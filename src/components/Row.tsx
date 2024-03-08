@@ -1,61 +1,54 @@
-export interface Letter {
-  key: string;
-  color: string;
-}
+import { KeyColor, Letter } from "./Shared";
 
-interface RowProps {
-  guess: Letter[] | null;
-  currentGuess: string | null;
-  rowIndex: number;
-}
-
-function Side(i: number): string {
-  if (i == 0) return "left";
-  else if (i == 4) return "right";
+function GetCornerTag(rowIndex: number, i: number): string {
+  if ((rowIndex === 0 || rowIndex === 5) && (i === 0 || i === 4)) {
+    const preffix = rowIndex === 0 ? "top" : "bot";
+    const suffix = i === 0 ? "-left" : "-right";
+    return preffix + suffix;
+  }
   return "";
 }
 
-function Row({ guess, currentGuess, rowIndex }: RowProps): JSX.Element {
-  let tag = "";
-  if (rowIndex == 0 || rowIndex == 5) {
-    tag = rowIndex == 0 ? "top" : "bot";
-  }
-  if (guess) {
-    return (
-      <div className="row past">
-        {guess.map((letter, i) => (
-          <div key={i} className={letter.color} id={tag + "-" + Side(i)}>
-            {letter.key}
-          </div>
-        ))}
-      </div>
-    );
-  } else if (currentGuess) {
-    const letters = currentGuess.split("");
-    const remain = new Array(5 - letters.length).fill(null);
+interface RowInput {
+  guess: Letter[];
+  currentGuess: string;
+  rowIndex: number;
+}
 
-    return (
-      <div className="row current">
-        {letters.map((letter, i) => (
-          <div key={i} className="filled" id={tag + "-" + Side(i)}>
-            {letter}
-          </div>
-        ))}
-        {remain.map((_, i) => (
-          <div key={i} id={tag + "-" + Side(letters.length + i)} />
-        ))}
-      </div>
-    );
+function BuildDivs(
+  rowClass: string,
+  guess: Letter[],
+  rowIndex: number
+): JSX.Element {
+  return (
+    <div className={rowClass}>
+      {guess.map((letter, i) => (
+        <div key={i} className={letter.color} id={GetCornerTag(rowIndex, i)}>
+          {letter.key}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Row({ guess, currentGuess, rowIndex }: RowInput): JSX.Element {
+  if (guess && guess.length > 0) {
+    return BuildDivs("row past", guess, rowIndex);
+  } else if (currentGuess.length > 0) {
+    currentGuess += " ".repeat(5 - currentGuess.length);
+    const letters: Letter[] = [];
+    currentGuess.split("").forEach((char) => {
+      const color = char === " " ? KeyColor.empty : KeyColor.filled;
+      const letter: Letter = { key: char, color: color };
+      letters.push(letter);
+    });
+    return BuildDivs("row current", letters, rowIndex);
   } else {
-    return (
-      <div className="row">
-        <div id={tag + "-" + Side(0)}></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div id={tag + "-" + Side(4)}></div>
-      </div>
-    );
+    const emptyLetters: Letter[] = [];
+    for (let i = 0; i < 5; i++) {
+      emptyLetters.push({ key: "", color: KeyColor.empty });
+    }
+    return BuildDivs("row", emptyLetters, rowIndex);
   }
 }
 
