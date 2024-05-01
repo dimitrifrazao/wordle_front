@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Wordle from "./components/Wordle";
 
-export const wordle_end_point = "https://44.218.136.154:5000/wordle";
+export const wordle_end_point = "https://www.dimitrifrazao.com/wordle/api";
 const invalid_user_id = "invalid_user_id";
 
 function App(): JSX.Element {
