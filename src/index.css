@@ -15,6 +15,46 @@
   --var_dark2: rgb(28, 0, 41);
   --var_darker: rgb(0, 15, 28);
 }
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--var_light);
+  padding: 10px;
+  margin: 0 0 20px 0;
+  border-bottom: 1px solid var(--var_light);
+}
+
+a:visited {
+  color: inherit; /* Keep the color of the link after visiting */
+}
+
+#icons {
+  margin: 5px 5px 5px 5px;
+}
+
+.left {
+  flex: 1;
+  text-align: left;
+}
+
+.right {
+  flex: 1;
+  text-align: right;
+}
+
+.title {
+  font-size: 2em;
+  font-family: var(--font-family);
+  /* padding: 20px 0; */
+  color: var(--var_light);
+  margin: 0 auto;
+
+  flex: 1;
+  text-align: center;
+}
+
 body {
   text-align: center;
   font-size: 1em;
@@ -23,13 +63,6 @@ body {
   padding: 0;
   height: 100vh;
   background: var(--var_dark);
-}
-h1 {
-  font-size: 2em;
-  font-family: var(--font-family);
-  padding: 20px 0;
-  margin: 0 0 20px 0;
-  color: var(--var_light);
 }
 
 /* rows */

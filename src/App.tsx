@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import Wordle from "./components/Wordle";
 
 export const wordle_end_point = "https://www.dimitrifrazao.com/wordle/api";
@@ -29,7 +30,43 @@ function App(): JSX.Element {
 
   return (
     <div className="App">
-      <h1>Wordle</h1>
+      <Helmet>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+        />
+      </Helmet>
+      <header>
+        <div className="left">
+          <a id="icons" href="https://www.dimitrifrazao.com">
+            <i className="material-symbols-outlined">home</i>
+          </a>
+        </div>
+        <h1 className="title">Wordle</h1>
+        <div className="right">
+          <span
+            id="icons"
+            className="material-symbols-outlined"
+            style={{ cursor: "pointer" }}
+          >
+            help
+          </span>
+          <span
+            id="icons"
+            className="material-symbols-outlined"
+            style={{ cursor: "pointer" }}
+          >
+            bar_chart
+          </span>
+          <span
+            id="icons"
+            className="material-symbols-outlined"
+            style={{ cursor: "pointer" }}
+          >
+            settings
+          </span>
+        </div>
+      </header>
       {Wordle(user_id)}
     </div>
   );
