@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import Wordle from "./components/Wordle";
 
-export const wordle_end_point = "https://www.dimitrifrazao.com/wordle/api";
+export const wordle_end_point = "https://44.218.136.154/wordle/api";
 const invalid_user_id = "invalid_user_id";
 
 function App(): JSX.Element {
